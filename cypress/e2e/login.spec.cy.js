@@ -1,4 +1,4 @@
-import userData from "../fixtures/user-data.json";
+import userData from "../fixtures/users/user-data.json";
 
 describe("Orange HRM Tests", () => {
   const selectorsList = {
@@ -12,9 +12,7 @@ describe("Orange HRM Tests", () => {
   };
 
   it("Login - Success", () => {
-    cy.visit(
-      "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-    );
+    cy.visit("/auth/login");
     cy.get(selectorsList.usernameInput).type(userData.userSuccess.username);
     cy.get(selectorsList.passwordInput).type(userData.userSuccess.password);
     cy.get(selectorsList.submitButton).click();

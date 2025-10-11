@@ -1,7 +1,10 @@
+const { defineConfig } = require("cypress");
 
-export default {
+module.exports = defineConfig({
   e2e: {
-    experimentalStudio: true,
-    // Se desejar manter outras configs, adicione aqui
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+    baseUrl: "https://opensource-demo.orangehrmlive.com/web/index.php",
   },
-}
+});
