@@ -20,6 +20,25 @@ class LoginPage {
         cy.get(this.selectorsList().passwordInput).type(password)
         cy.get(this.selectorsList().loginButton).click()
     }
+
+    loginWithWrongUsername(username, password) {
+        cy.get(this.selectorsList().usernameInput).type(username)
+        cy.get(this.selectorsList().passwordInput).type(password)
+        cy.get(this.selectorsList().loginButton).click()
+        cy.get(this.selectorsList().wrongCredentialsError).contains("Invalid credentials")
+    }
+
+    loginWithWrongPassword(username, password) {
+        cy.get(this.selectorsList().usernameInput).type(username)
+        cy.get(this.selectorsList().passwordInput).type(password)
+        cy.get(this.selectorsList().loginButton).click()
+        cy.get(this.selectorsList().wrongCredentialsError).contains("Invalid credentials")
+    }
+
+    loginWithEmptyFields() {
+        cy.get(this.selectorsList().loginButton).click()
+        cy.get(".oxd-input-group > .oxd-text").contains("Required")
+    }
 }
 
 export default LoginPage
