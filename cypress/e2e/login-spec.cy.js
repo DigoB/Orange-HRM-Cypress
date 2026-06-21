@@ -1,54 +1,58 @@
+import userData from '../fixtures/users/userData.json'
+
 describe('template spec', () => {
 
   const selectorsList = {
     username: '[name="username"]',
     password: '[name="password"]',
-    loginButton: '.oxd-button'
+    loginButton: '.oxd-button',
+    alertMessage: '.oxd-alert-content-text',
+    requiredMessage: '.oxd-input-group__message'
   }
 
   it('successful login', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.username).type('Admin')
-    cy.get(selectorsList.password).type('admin123')
+    cy.get(selectorsList.username).type(userData.validUser.validUsername)
+    cy.get(selectorsList.password).type(userData.validUser.validPassword)
     cy.get(selectorsList.loginButton).click()
     cy.url().should('include', '/dashboard')
   })
 
   it('unsuccessful login with wrong credentials', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.username).type('Admin')
-    cy.get(selectorsList.password).type('wrongpassword')
+    cy.get(selectorsList.username).type(userData.invalidUser.invalidUsername)
+    cy.get(selectorsList.password).type(userData.invalidUser.invalidPassword)
     cy.get(selectorsList.loginButton).click()
-    cy.get('.oxd-alert-content-text').should('contain', 'Invalid credentials')
+    cy.get(selectorsList.alertMessage).should('contain', 'Invalid credentials')
   })
 
   it('unsuccessful login with empty fields', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.get(selectorsList.loginButton).click()
-    cy.get('.oxd-input-group__message').should('contain', 'Required')
+    cy.get(selectorsList.requiredMessage).should('contain', 'Required')
   })
 
   it('unsuccessful login with empty username', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.password).type('admin123')
+    cy.get(selectorsList.password).type(userData.validUser.validPassword)
     cy.get(selectorsList.loginButton).click()
-    cy.get('.oxd-input-group__message').should('contain', 'Required')
+    cy.get(selectorsList.requiredMessage).should('contain', 'Required')
   })
 
   it('unsuccessful login with empty password', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(selectorsList.username).type('Admin')
+    cy.get(selectorsList.username).type(userData.validUser.validUsername)
     cy.get(selectorsList.loginButton).click()
-    cy.get('.oxd-input-group__message').should('contain', 'Required')
+    cy.get(selectorsList.requiredMessage).should('contain', 'Required')
   })
 
-  it.only('status code verification with successful login', () => {
+  it('status code verification with successful login', () => {
     cy.intercept('POST', '**').as('loginRequest')
 
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
-    cy.get(selectorsList.username).type('Admin')
-    cy.get(selectorsList.password).type('admin123')
+    cy.get(selectorsList.username).type(userData.validUser.validUsername)
+    cy.get(selectorsList.password).type(userData.validUser.validPassword)
     cy.get(selectorsList.loginButton).click()
 
     cy.wait('@loginRequest')
@@ -62,8 +66,8 @@ describe('template spec', () => {
 
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
-    cy.get(selectorsList.username).type('Admin')
-    cy.get(selectorsList.password).type('wrongpassword')
+    cy.get(selectorsList.username).type(userData.invalidUser.invalidUsername)
+    cy.get(selectorsList.password).type(userData.invalidUser.invalidPassword)
     cy.get(selectorsList.loginButton).click()
 
     cy.wait('@loginRequest')
