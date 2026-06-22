@@ -7,7 +7,11 @@ describe('template spec', () => {
     password: '[name="password"]',
     loginButton: '.oxd-button',
     alertMessage: '.oxd-alert-content-text',
-    requiredMessage: '.oxd-input-group__message'
+    requiredMessage: '.oxd-input-group__message',
+    userFirstName: '[name="firstName"]',
+    userMiddleName: '[name="middleName"]',
+    userLastName: '[name="lastName"]',
+    saveButton: ':nth-child(1) > .oxd-form > .oxd-form-actions > .oxd-button'
   }
 
   it('successful login', () => {
@@ -73,5 +77,21 @@ describe('template spec', () => {
     cy.wait('@loginRequest')
     .its('response.statusCode')
     .should('be.oneOf', [400, 401, 302])
+  })
+
+  it('Successful User Name, Middle Name and Last Name Update', () => {
+    cy.visit('/auth/login')
+    cy.get(selectorsList.username).type(userData.validUser.validUsername)
+    cy.get(selectorsList.password).type(userData.validUser.validPassword)
+    cy.get(selectorsList.loginButton).click()
+    cy.url().should('include', '/dashboard')
+    cy.visit('/pim/viewPersonalDetails/empNumber/7')
+    cy.get(selectorsList.userFirstName).clear().type(userData.updateUser.updatedUsername)
+    cy.get(selectorsList.userMiddleName).clear().type(userData.updateUser.updatedMiddleName)
+    cy.get(selectorsList.userLastName).clear().type(userData.updateUser.updatedPassword)
+    cy.get(selectorsList.saveButton).click()
+    cy.get(selectorsList.userFirstName).should('have.value', userData.updateUser.updatedUsername)
+    cy.get(selectorsList.userMiddleName).should('have.value', userData.updateUser.updatedMiddleName)
+    cy.get(selectorsList.userLastName).should('have.value', userData.updateUser.updatedPassword)
   })
 })

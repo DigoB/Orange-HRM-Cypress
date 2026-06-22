@@ -6,6 +6,11 @@
     "invalidUser": {
         "invalidUsername": "InvalidUser",
         "invalidPassword": "InvalidPassword"
+    },
+    "updateUser": {
+        "updatedUsername": "UpdatedUser",
+        "updatedMiddleName": "UpdatedMiddleName",
+        "updatedPassword": "UpdatedPassword"
     }
 }
   
