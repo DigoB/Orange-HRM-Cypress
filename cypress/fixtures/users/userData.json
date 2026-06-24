@@ -10,7 +10,11 @@
     "updateUser": {
         "updatedUsername": "UpdatedUser",
         "updatedMiddleName": "UpdatedMiddleName",
-        "updatedPassword": "UpdatedPassword"
+        "updatedPassword": "UpdatedPassword",
+        "updatedEmployeeId": "12345",
+        "updatedOtherId": "123456789",
+        "updatedDriverLicense": "123456789",
+        "updatedLicenseExpiryDate": "2025-12-31"
     }
 }
   
