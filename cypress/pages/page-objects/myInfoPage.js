@@ -24,7 +24,7 @@ class MyInfoPage {
     }
 
     navigateToMyInfo(empNumber) {
-        cy.visit(`/pim/viewPersonalDetails/empNumber/${empNumber}`)
+        cy.visit(`/web/index.php/pim/viewPersonalDetails/empNumber/${empNumber}`)
     }
 
     updateUserInfo({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {

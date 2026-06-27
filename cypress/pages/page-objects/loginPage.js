@@ -11,7 +11,7 @@ class LoginPage {
     }
 
     accessLoginPage() {
-        cy.visit('/auth/login')
+        cy.visit('/web/index.php/auth/login')
     }
 
     loginWithCredentials(username = null, password = null) {
