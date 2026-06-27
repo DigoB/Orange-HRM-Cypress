@@ -1,3 +1,5 @@
+import { MESSAGES as messages } from '../support/constants/messages'
+
 class LoginPage {
 
     selectorsList = {
@@ -12,35 +14,23 @@ class LoginPage {
         cy.visit('/auth/login')
     }
 
-    loginWithValidCredentials(username, password) {
-        cy.get(this.selectorsList.username).type(username)
-        cy.get(this.selectorsList.password).type(password)
+    loginWithCredentials(username = null, password = null) {
+        if (username) cy.get(this.selectorsList.username).type(username)
+        if (password) cy.get(this.selectorsList.password).type(password)
         cy.get(this.selectorsList.loginButton).click()
-        cy.url().should('include', '/dashboard')
     }
 
-    loginWithInvalidCredentials(username, password) {
-        cy.get(this.selectorsList.username).type(username)
-        cy.get(this.selectorsList.password).type(password)
-        cy.get(this.selectorsList.loginButton).click()
-        cy.get(this.selectorsList.alertMessage).should('contain', 'Invalid credentials')
+    checkRedirectionToDashboard() {
+        cy.url({ timeout: 10000 }).should('include', '/dashboard')
     }
 
-    loginWithEmptyFields() {
-        cy.get(this.selectorsList.loginButton).click()
-        cy.get(this.selectorsList.requiredMessage).should('contain', 'Required')
+    // ✅ método só de asserção
+    checkInvalidCredentialsMessage() {
+        cy.get(this.selectorsList.alertMessage).should('contain', messages.invalidCredentials)
     }
 
-    loginWithEmptyUsername(password) {
-        cy.get(this.selectorsList.password).type(password)
-        cy.get(this.selectorsList.loginButton).click()
-        cy.get(this.selectorsList.requiredMessage).should('contain', 'Required')
-    }
-    
-    loginWithEmptyPassword(username) {
-        cy.get(this.selectorsList.username).type(username)
-        cy.get(this.selectorsList.loginButton).click()
-        cy.get(this.selectorsList.requiredMessage).should('contain', 'Required')
+    checkRequiredFieldMessage() {
+        cy.get(this.selectorsList.requiredMessage).should('contain', messages.requiredField)
     }
 }
 

@@ -1,43 +1,45 @@
 import userData from '../fixtures/users/userData.json'
 import LoginPage from '../pages/loginPage.js'
-import MyInfoPage from '../pages/myInfoPage.js'
 
-describe('template spec', () => {
+describe('Login - Functional Tests', () => {
 
-  const loginPage = new LoginPage()
-  const myInfoPage = new MyInfoPage()
+  let loginPage
+
+  beforeEach(() => {
+    loginPage = new LoginPage()
+    loginPage.accessLoginPage()
+  })
 
   it('successful login', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithValidCredentials(userData.validUser.validUsername, userData.validUser.validPassword)
-  }),
+    loginPage.loginWithCredentials(userData.validUser.validUsername, userData.validUser.validPassword)
+    loginPage.checkRedirectionToDashboard()
+  })
 
   it('unsuccessful login with wrong credentials', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithInvalidCredentials(userData.invalidUser.invalidUsername, userData.invalidUser.invalidPassword)
+    loginPage.loginWithCredentials(userData.invalidUser.invalidUsername, userData.invalidUser.invalidPassword)
+    loginPage.checkInvalidCredentialsMessage()
   })
 
   it('unsuccessful login with empty fields', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithEmptyFields()
+    loginPage.loginWithCredentials(null, null)
+    loginPage.checkRequiredFieldMessage()
   })
 
   it('unsuccessful login with empty username', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithEmptyUsername(userData.validUser.validPassword)
+    loginPage.loginWithCredentials(null, userData.validUser.validPassword)
+    loginPage.checkRequiredFieldMessage()
   })
 
   it('unsuccessful login with empty password', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithEmptyPassword(userData.validUser.validUsername)
+    loginPage.loginWithCredentials(userData.validUser.validUsername, null)
+    loginPage.checkRequiredFieldMessage()
   })
 
   it('status code verification with successful login', () => {
     cy.intercept('POST', '**').as('loginRequest')
 
-    loginPage.accessLoginPage()
-
-    loginPage.loginWithValidCredentials(userData.validUser.validUsername, userData.validUser.validPassword)
+    loginPage.loginWithCredentials(userData.validUser.validUsername, userData.validUser.validPassword)
+    loginPage.checkRedirectionToDashboard()
 
     cy.wait('@loginRequest')
     .its('response.statusCode')
@@ -48,20 +50,13 @@ describe('template spec', () => {
   it('status code verification with wrong credentials', () => {
     cy.intercept('POST', '**').as('loginRequest')
 
-    loginPage.accessLoginPage()
+    loginPage.loginWithCredentials(userData.invalidUser.invalidUsername, userData.invalidUser.invalidPassword)
 
-    loginPage.loginWithInvalidCredentials(userData.invalidUser.invalidUsername, userData.invalidUser.invalidPassword)
-
+    // OrangeHRM demo environment returns inconsistent status codes (302 for both 
+    // successful and failed login attempts). Broad assertion is intentional due 
+    // to the instability of the test environment.
     cy.wait('@loginRequest')
     .its('response.statusCode')
-    .should('be.oneOf', [400, 401, 302,301])
-  })
-
-  it('Successful User Name, Middle Name and Last Name Update', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithValidCredentials(userData.validUser.validUsername, userData.validUser.validPassword)
-    
-    cy.visit('/pim/viewPersonalDetails/empNumber/7')
-    myInfoPage.updateUserInfo()
+    .should('be.oneOf', [400, 401, 302, 301])
   })
 })

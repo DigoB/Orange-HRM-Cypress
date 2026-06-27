@@ -1,5 +1,3 @@
-import userData from '../fixtures/users/userData.json'
-
 class MyInfoPage {
     selectorsList = {
         userFirstName: '[name="firstName"]',
@@ -11,26 +9,29 @@ class MyInfoPage {
         licenseExpiryDate: ':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-date-wrapper > .oxd-date-input > .oxd-input',
         saveButton: ':nth-child(1) > .oxd-form > .oxd-form-actions > .oxd-button',
         closeSuccessMessageButton: '.oxd-toast-close'
-  }
+    }
 
-  updateUserInfo() {
-    cy.get(this.selectorsList.userFirstName).clear().type(userData.updateUser.updatedUsername)
-    cy.get(this.selectorsList.userMiddleName).clear().type(userData.updateUser.updatedMiddleName)
-    cy.get(this.selectorsList.userLastName).clear().type(userData.updateUser.updatedPassword)
-    cy.get(this.selectorsList.employeeId).clear().type(userData.updateUser.updatedEmployeeId)
-    cy.get(this.selectorsList.otherId).clear().type(userData.updateUser.updatedOtherId)
-    cy.get(this.selectorsList.driverLicense).clear().type(userData.updateUser.updatedDriverLicense)
-    cy.get(this.selectorsList.licenseExpiryDate).eq(0).clear().type(userData.updateUser.updatedLicenseExpiryDate)
-    cy.get(this.selectorsList.saveButton).click()
-    cy.get(this.selectorsList.userFirstName).should('have.value', userData.updateUser.updatedUsername)
-    cy.get(this.selectorsList.userMiddleName).should('have.value', userData.updateUser.updatedMiddleName)
-    cy.get(this.selectorsList.userLastName).should('have.value', userData.updateUser.updatedPassword)
-    cy.get(this.selectorsList.employeeId).should('have.value', userData.updateUser.updatedEmployeeId)
-    cy.get(this.selectorsList.otherId).should('have.value', userData.updateUser.updatedOtherId)
-    cy.get(this.selectorsList.driverLicense).should('have.value', userData.updateUser.updatedDriverLicense)
-    //cy.get(this.selectorsList.licenseExpiryDate).should('have.value', userData.updateUser.updatedLicenseExpiryDate)
+    navigateToMyInfo(empNumber) {
+        cy.visit(`/pim/viewPersonalDetails/empNumber/${empNumber}`)
+    }
 
-    cy.get(this.selectorsList.closeSuccessMessageButton).should('be.visible').click()
+    updateUserInfo({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
+        cy.get(this.selectorsList.userFirstName).clear().type(firstName)
+        cy.get(this.selectorsList.userMiddleName).clear().type(middleName)
+        cy.get(this.selectorsList.userLastName).clear().type(lastName)
+        cy.get(this.selectorsList.employeeId).clear().type(employeeId)
+        cy.get(this.selectorsList.otherId).clear().type(otherId)
+        cy.get(this.selectorsList.driverLicense).clear().type(driverLicense)
+        cy.get(this.selectorsList.licenseExpiryDate).eq(0).clear().type(licenseExpiryDate)
+        cy.get(this.selectorsList.saveButton).click()
+        cy.contains('Success').should('be.visible')
+        cy.get(this.selectorsList.userFirstName).should('have.value', firstName)
+        cy.get(this.selectorsList.userMiddleName).should('have.value', middleName)
+        cy.get(this.selectorsList.userLastName).should('have.value', lastName)
+        cy.get(this.selectorsList.employeeId).should('have.value', employeeId)
+        cy.get(this.selectorsList.otherId).should('have.value', otherId)
+        cy.get(this.selectorsList.driverLicense).should('have.value', driverLicense)
+        cy.get(this.selectorsList.closeSuccessMessageButton).click()
     }
 }
 
