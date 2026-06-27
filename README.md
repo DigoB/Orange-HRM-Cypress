@@ -65,7 +65,7 @@ cypress/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/seu-usuario/orange-hrm-cypress.git
+git clone https://github.com/DigoB/orange-hrm-cypress.git
 cd orange-hrm-cypress
 ```
 

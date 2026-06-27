@@ -1,14 +1,26 @@
+import { MESSAGES as messages } from '../../support/constants/messages'
+
 class MyInfoPage {
     selectorsList = {
         userFirstName: '[name="firstName"]',
         userMiddleName: '[name="middleName"]',
         userLastName: '[name="lastName"]',
-        employeeId: ':nth-child(1) > :nth-child(1) > .oxd-input-group > :nth-child(2) > .oxd-input',
-        otherId: ':nth-child(3) > :nth-child(1) > :nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input',
-        driverLicense: ':nth-child(3) > :nth-child(1) > :nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input',
-        licenseExpiryDate: ':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-date-wrapper > .oxd-date-input > .oxd-input',
         saveButton: ':nth-child(1) > .oxd-form > .oxd-form-actions > .oxd-button',
         closeSuccessMessageButton: '.oxd-toast-close'
+    }
+
+    // Método auxiliar — inputs de texto simples
+    getFieldByLabel(label) {
+        return cy.contains('label', label)
+            .parents('.oxd-input-group')
+            .find('.oxd-input')
+    }
+
+    // Método auxiliar — inputs de data (estrutura diferente)
+    getDateFieldByLabel(label) {
+        return cy.contains('label', label)
+            .parents('.oxd-input-group')
+            .find('.oxd-date-input .oxd-input')
     }
 
     navigateToMyInfo(empNumber) {
@@ -19,18 +31,22 @@ class MyInfoPage {
         cy.get(this.selectorsList.userFirstName).clear().type(firstName)
         cy.get(this.selectorsList.userMiddleName).clear().type(middleName)
         cy.get(this.selectorsList.userLastName).clear().type(lastName)
-        cy.get(this.selectorsList.employeeId).clear().type(employeeId)
-        cy.get(this.selectorsList.otherId).clear().type(otherId)
-        cy.get(this.selectorsList.driverLicense).clear().type(driverLicense)
-        cy.get(this.selectorsList.licenseExpiryDate).eq(0).clear().type(licenseExpiryDate)
+        this.getFieldByLabel('Employee Id').clear().type(employeeId)
+        this.getFieldByLabel('Other Id').clear().type(otherId)
+        this.getFieldByLabel("Driver's License Number").clear().type(driverLicense)
+        this.getDateFieldByLabel('License Expiry Date').clear().type(licenseExpiryDate)
         cy.get(this.selectorsList.saveButton).click()
-        cy.contains('Success').should('be.visible')
+    }
+
+    checkUserInfoUpdated({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
+        cy.contains(messages.updateSuccess).should('be.visible')
         cy.get(this.selectorsList.userFirstName).should('have.value', firstName)
         cy.get(this.selectorsList.userMiddleName).should('have.value', middleName)
         cy.get(this.selectorsList.userLastName).should('have.value', lastName)
-        cy.get(this.selectorsList.employeeId).should('have.value', employeeId)
-        cy.get(this.selectorsList.otherId).should('have.value', otherId)
-        cy.get(this.selectorsList.driverLicense).should('have.value', driverLicense)
+        this.getFieldByLabel('Employee Id').should('have.value', employeeId)
+        this.getFieldByLabel('Other Id').should('have.value', otherId)
+        this.getFieldByLabel("Driver's License Number").should('have.value', driverLicense)
+        this.getDateFieldByLabel('License Expiry Date').should('have.value', licenseExpiryDate)
         cy.get(this.selectorsList.closeSuccessMessageButton).click()
     }
 }
