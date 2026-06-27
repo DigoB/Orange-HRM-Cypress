@@ -1,5 +1,5 @@
-import userData from '../fixtures/users/userData.json'
-import LoginPage from '../pages/loginPage.js'
+import userData from '../../fixtures/users/userData.json'
+import LoginPage from '../../pages/page-objects/loginPage.js'
 
 describe('Login - Functional Tests', () => {
 

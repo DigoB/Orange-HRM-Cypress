@@ -1,4 +1,4 @@
-import { MESSAGES as messages } from '../support/constants/messages'
+import { MESSAGES as messages } from '../../support/constants/messages'
 
 class LoginPage {
 

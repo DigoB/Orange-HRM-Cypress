@@ -1,5 +1,9 @@
 node_modules/
 
+#Cypress
+cypress/screenshots
+cypress/videos
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

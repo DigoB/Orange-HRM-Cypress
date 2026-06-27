@@ -1,6 +1,6 @@
-import LoginPage from '../pages/loginPage.js'
-import MyInfoPage from '../pages/myInfoPage.js'
-import userData from '../fixtures/users/userData.json'
+import LoginPage from '../../pages/page-objects/loginPage.js'
+import MyInfoPage from '../../pages/myInfoPage.js'
+import userData from '../../fixtures/users/userData.json'
 
 describe('MyInfo - Update Personal Details', () => {
 
