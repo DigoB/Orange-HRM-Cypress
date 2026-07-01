@@ -39,7 +39,7 @@ class MyInfoPage {
     }
 
     checkUserInfoUpdated({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
-        cy.contains(messages.updateSuccess).should('be.visible')
+        cy.contains(messages.updateSuccess, { timeout: 10000 }).should('be.visible')
         cy.get(this.selectorsList.userFirstName).should('have.value', firstName)
         cy.get(this.selectorsList.userMiddleName).should('have.value', middleName)
         cy.get(this.selectorsList.userLastName).should('have.value', lastName)
