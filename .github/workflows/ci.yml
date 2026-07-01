@@ -1,25 +1,35 @@
-name: CI
+name: Cypress Tests
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  build-test:
+  cypress-run:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
 
-      - name: Cypress Tests
-        uses: cypress-io/github-action@v5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          start: 'npm run dev'
-          build: 'npm run build'
-          
-      - uses: actions/upload-artifact@v3
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        run: npx cypress run
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cypress Results
-          path: |
-            cypress/screenshots
-            cypress/videos
-            cypress/results
-          if-no-files-found: ignore
+          name: cypress-report
+          path: cypress/reports/
