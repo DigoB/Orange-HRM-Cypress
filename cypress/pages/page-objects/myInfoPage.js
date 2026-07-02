@@ -27,7 +27,7 @@ class MyInfoPage {
         cy.visit(`/web/index.php/pim/viewPersonalDetails/empNumber/${empNumber}`)
     }
 
-    updateUserInfo({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
+   updateUserInfo({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
         cy.get(this.selectorsList.userFirstName).clear().type(firstName)
         cy.get(this.selectorsList.userMiddleName).clear().type(middleName)
         cy.get(this.selectorsList.userLastName).clear().type(lastName)
@@ -36,7 +36,7 @@ class MyInfoPage {
         this.getFieldByLabel("Driver's License Number").clear().type(driverLicense)
         this.getDateFieldByLabel('License Expiry Date').clear().type(licenseExpiryDate)
         cy.get(this.selectorsList.saveButton).click()
-    }
+}
 
     checkUserInfoUpdated({ firstName, middleName, lastName, employeeId, otherId, driverLicense, licenseExpiryDate }) {
         cy.contains(messages.updateSuccess, { timeout: 10000 }).should('be.visible')
