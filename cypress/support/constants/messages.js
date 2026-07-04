@@ -3,5 +3,6 @@ export const MESSAGES = {
     requiredField: 'Required',
     updateSuccess: 'Success',
     addEmployeeSuccess: 'Success',
-    invalidDateFormat: 'Should be a valid date in yyyy-mm-dd format'
+    invalidDateFormat: 'Should be a valid date in yyyy-mm-dd format',
+    noRecordsFound: 'No Records Found'
 }

@@ -24,5 +24,12 @@
         "firstName": "TestFirst",
         "middleName": "TestMiddle",
         "lastName": "TestLast"
+    },
+
+    "employeeList": {
+        "validEmployeeId": "12331",
+        "invalidEmployeeId": "999999",
+        "expectedFirstName": "Sadat",
+        "expectedLastName": "Ilyas"
     }
 }
