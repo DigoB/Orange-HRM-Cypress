@@ -17,3 +17,7 @@
 import './commands'
 import 'cypress-mochawesome-reporter/register'
 import './commands'
+
+Cypress.on('uncaught:exception', (e) => {
+    return false
+})

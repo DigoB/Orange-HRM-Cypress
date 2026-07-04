@@ -4,10 +4,12 @@
         "validPassword": "admin123",
         "validEmployeeId": "7"
     },
+
     "invalidUser": {
         "invalidUsername": "InvalidUser",
         "invalidPassword": "InvalidPassword"
     },
+
     "updateUser": {
         "firstName": "UpdatedFirstName",
         "middleName": "UpdatedMiddleName",
@@ -16,5 +18,11 @@
         "otherId": "123456789",
         "driverLicense": "123456789",
         "licenseExpiryDate": "2025-31-12"
+    },
+
+    "addEmployee": {
+        "firstName": "TestFirst",
+        "middleName": "TestMiddle",
+        "lastName": "TestLast"
     }
 }
