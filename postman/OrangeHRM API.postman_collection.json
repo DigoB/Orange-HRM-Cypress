@@ -1,0 +1,499 @@
+{
+  "info": {
+    "_postman_id": "f18cf363-1e57-4a93-b2be-01ff7c96381e",
+    "name": "OrangeHRM API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56431985",
+    "_collection_link": "https://go.postman.co/collection/56431985-f18cf363-1e57-4a93-b2be-01ff7c96381e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const html = pm.response.text()",
+                  "const match = html.match(/name=\"_token\"\\s+value=\"([^\"]+)\"/)",
+                  "if (match) {",
+                  "    pm.environment.set('csrf_token', match[1])",
+                  "    console.log('CSRF Token capturado:', match[1])",
+                  "} else {",
+                  "    console.log('CSRF Token não encontrado')",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "_username",
+                  "value": "{{username}}",
+                  "type": "text",
+                  "uuid": "ec742d93-f7eb-4e67-ba01-8773c834c4a1"
+                },
+                {
+                  "key": "_password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "b7a44b30-42bc-4b67-b5fa-0d4ed119c879"
+                },
+                {
+                  "key": "token",
+                  "value": "{{csrf_token}}",
+                  "type": "text",
+                  "uuid": "3571cc2d-b2b3-4912-83a6-5ae701af1790"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/validate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "validate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get CSRF Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const html = pm.response.text()",
+                  "const match = html.match(/:token=\"&quot;([^&]+)&quot;\"/)",
+                  "if (match) {",
+                  "    pm.environment.set('csrf_token', match[1])",
+                  "    console.log('CSRF Token capturado:', match[1])",
+                  "} else {",
+                  "    console.log('CSRF Token não encontrado')",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "apikey",
+        "apikey": [
+          {
+            "key": "value",
+            "value": "orangehrm={{token}}",
+            "type": "string"
+          },
+          {
+            "key": "key",
+            "value": "Cookie",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Get Employee List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200)",
+                  "})",
+                  "",
+                  "pm.test(\"Response has data array\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.be.an('array')",
+                  "})",
+                  "",
+                  "pm.test(\"Response has meta with total\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.meta).to.have.property('total')",
+                  "    pm.expect(json.meta.total).to.be.above(0)",
+                  "})",
+                  "",
+                  "pm.test(\"Each employee has required fields\", function () {",
+                  "    const json = pm.response.json()",
+                  "    json.data.forEach(employee => {",
+                  "        pm.expect(employee).to.have.property('empNumber')",
+                  "        pm.expect(employee).to.have.property('firstName')",
+                  "        pm.expect(employee).to.have.property('lastName')",
+                  "        pm.expect(employee).to.have.property('employeeId')",
+                  "    })",
+                  "})",
+                  "",
+                  "pm.test(\"Response time is less than 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000)",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pim/employees?limit=10&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pim",
+                "employees"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Employee by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200)",
+                  "})",
+                  "",
+                  "pm.test(\"Employee has correct empNumber\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data.empNumber).to.eql(parseInt(pm.environment.get('emp_number')))",
+                  "})",
+                  "",
+                  "pm.test(\"Employee has required fields\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.have.property('empNumber')",
+                  "    pm.expect(json.data).to.have.property('firstName')",
+                  "    pm.expect(json.data).to.have.property('lastName')",
+                  "    pm.expect(json.data).to.have.property('employeeId')",
+                  "})",
+                  "",
+                  "pm.test(\"Response time is less than 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000)",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pim/employees/{{emp_number}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pim",
+                "employees",
+                "{{emp_number}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Employee Personal Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200)",
+                  "})",
+                  "",
+                  "pm.test(\"Response has personal details data\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.be.an('object')",
+                  "})",
+                  "",
+                  "pm.test(\"Personal details has required fields\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.have.property('empNumber')",
+                  "    pm.expect(json.data).to.have.property('firstName')",
+                  "    pm.expect(json.data).to.have.property('lastName')",
+                  "    pm.expect(json.data).to.have.property('gender')",
+                  "    pm.expect(json.data).to.have.property('nationality')",
+                  "})",
+                  "",
+                  "pm.test(\"Response time is less than 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000)",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pim/employees/{{emp_number}}/personal-details",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pim",
+                "employees",
+                "{{emp_number}}",
+                "personal-details"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200)",
+                  "})",
+                  "",
+                  "pm.test(\"Employee created with correct data\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data.firstName).to.eql(\"API\")",
+                  "    pm.expect(json.data.lastName).to.eql(\"Employee\")",
+                  "})",
+                  "",
+                  "pm.test(\"Created employee has empNumber\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.have.property('empNumber')",
+                  "    pm.environment.set('created_emp_number', json.data.empNumber)",
+                  "})",
+                  "",
+                  "pm.test(\"Response time is less than 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000)",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"API\",\n    \"middleName\": \"Test\",\n    \"lastName\": \"Employee\",\n    \"employeeId\": \"API001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v2/pim/employees",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pim",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Employee Personal Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200)",
+                  "})",
+                  "",
+                  "pm.test(\"Employee updated with correct data\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data.middleName).to.eql(\"Updated\")",
+                  "})",
+                  "",
+                  "pm.test(\"Response has updated employee data\", function () {",
+                  "    const json = pm.response.json()",
+                  "    pm.expect(json.data).to.have.property('empNumber')",
+                  "    pm.expect(json.data.firstName).to.eql(\"API\")",
+                  "    pm.expect(json.data.lastName).to.eql(\"Employee\")",
+                  "})",
+                  "",
+                  "pm.test(\"Response time is less than 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000)",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Yazeed\",\n    \"middleName\": \"Gasem\",\n    \"lastName\": \"Ali\",\n    \"otherId\": \"\",\n    \"drivingLicenseNo\": \"\",\n    \"drivingLicenseExpiredDate\": null,\n    \"gender\": null,\n    \"maritalStatus\": null,\n    \"birthday\": null,\n    \"nationalityId\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v2/pim/employees/{{emp_number}}/personal-details",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pim",
+                "employees",
+                "{{emp_number}}",
+                "personal-details"
+              ]
+            },
+            "description": "⚠️ Este endpoint retorna 500 no ambiente demo do OrangeHRM devido a  \ninstabilidade do ambiente compartilhado. O endpoint foi mapeado e  \ntestado, porém não é possível garantir estabilidade nas execuções."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "orangehrm={{token}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "Cookie",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
